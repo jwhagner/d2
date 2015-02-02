@@ -1,0 +1,7 @@
+Game - 3
+House - 7
+Player - 6
+Room - 8
+Total - 24
+Joe - Game, House, Player[1-2]
+Mark - Player[3-6], Room
