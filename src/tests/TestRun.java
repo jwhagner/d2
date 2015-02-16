@@ -54,6 +54,17 @@ public class TestRun {
 		assertEquals(retValue, 0);
 	}
 	
+	// Tests Game.doSomething() with the input 'n'
+		@Test
+		public void testDoSomethingNorthLowercase() {
+			House mockHouse = mock(House.class);
+			Game g = new Game(new Player(), mockHouse);
+			int retValue = g.doSomething("n");
+			verify(mockHouse, times(1)).moveNorth();
+			
+			assertEquals(retValue, 0);
+		}
+	
 	// Tests Game.doSomething() with the input 'S'
 	@Test
 	public void testDoSomethingSouth() {
@@ -63,24 +74,109 @@ public class TestRun {
 		verify(mockHouse, times(1)).moveSouth();
 		assertEquals(retValue, 0);
 	}
+
+	// Tests Game.doSomething() with the input 's'
+	@Test
+	public void testDoSomethingSouthLowercase() {
+		House mockHouse = mock(House.class);
+		Game g = new Game(new Player(), mockHouse);
+		int retValue = g.doSomething("s");
+		verify(mockHouse, times(1)).moveSouth();
+		assertEquals(retValue, 0);
+	}
 	
+	// Tests Game.doSomething() with the input 'L'
 	@Test
 	public void testDoSomethingLook() {
+		House mockHouse = mock(House.class);
+		Player mockPlayer = mock(Player.class);
+		Game g = new Game(mockPlayer, mockHouse);
+		int retValue = g.doSomething("L");
+		verify(mockHouse, times(1)).look(mockPlayer, null);
+		assertEquals(retValue, 0);
+	}
+
+	// Tests Game.doSomething() with the input 'l'
+	@Test
+	public void testDoSomethingLookLowercase() {
+		House mockHouse = mock(House.class);
+		Player mockPlayer = mock(Player.class);
+		Game g = new Game(mockPlayer, mockHouse);
+		int retValue = g.doSomething("l");
+		verify(mockHouse, times(1)).look(mockPlayer, null);
+		assertEquals(retValue, 0);
+	}
+
+	// Tests Game.doSomething() with the input 'I'
+	@Test
+	public void testDoSomethingInventory() {
+		House mockHouse = mock(House.class);
+		Player mockPlayer = mock(Player.class);
+		Game g = new Game(mockPlayer, mockHouse);
+		int retValue = g.doSomething("I");
+		verify(mockPlayer, times(1)).showInventory();
+		assertEquals(retValue, 0);
+	}
+
+	// Tests Game.doSomething() with the input 'i'
+	@Test
+	public void testDoSomethingInventoryLowercase() {
+		House mockHouse = mock(House.class);
+		Player mockPlayer = mock(Player.class);
+		Game g = new Game(mockPlayer, mockHouse);
+		int retValue = g.doSomething("i");
+		verify(mockPlayer, times(1)).showInventory();
+		assertEquals(retValue, 0);
+	}
+	
+	// Tests Game.doSomething() with the input 'D' with winning conditions
+	@Test
+	public void testDoSomethingDrinkWin() {
+		House mockHouse = mock(House.class);
+		Player mockPlayer = mock(Player.class);
+		// Stub out Player.drink()
+		when(mockPlayer.drink()).thenReturn(true);
+		Game g = new Game(mockPlayer, mockHouse);
+		int retValue = g.doSomething("D");
+		verify(mockPlayer, times(1)).drink();
+		assertEquals(retValue, 1);
+	}
+
+	// Tests Game.doSomething() with the input 'd' with winning conditions
+	@Test
+	public void testDoSomethingDrinkWinLowercase() {
+		House mockHouse = mock(House.class);
+		Player mockPlayer = mock(Player.class);
+		// Stub out Player.drink()
+		when(mockPlayer.drink()).thenReturn(true);
+		Game g = new Game(mockPlayer, mockHouse);
+		int retValue = g.doSomething("d");
+		verify(mockPlayer, times(1)).drink();
+		assertEquals(retValue, 1);
+	}
+
+	// Tests Game.doSomething() with the input 'D' with losing conditions
+	@Test
+	public void testDoSomethingDrinkLose() {
+		House mockHouse = mock(House.class);
+		Player mockPlayer = mock(Player.class);
+		// Stub out Player.drink()
+		when(mockPlayer.drink()).thenReturn(false);
+		Game g = new Game(mockPlayer, mockHouse);
+		int retValue = g.doSomething("D");
+		verify(mockPlayer, times(1)).drink();
+		assertEquals(retValue, -1);
+	}
+
+	// Tests Game.doSomething() with the input 'H'
+	@Test
+	public void testDoSomethingHelp() {
 		fail("Not implemented");
 	}
 
+	// Tests Game.doSomething() with the input 'h'
 	@Test
-	public void testDoSomethingInventory() {
-		fail("Not implemented");
-	}
-	
-	@Test
-	public void testDoSomethingDrink() {
-		fail("Not implemented");
-	}
-	
-	@Test
-	public void testDoSomethingHelp() {
+	public void testDoSomethingHelpLowercase() {
 		fail("Not implemented");
 	}
 	
@@ -117,6 +213,7 @@ public class TestRun {
 		int result = g.run();
 		assertEquals(result, 1);
 	}
+	
 	//////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////
 	///                                                            ///
@@ -209,14 +306,21 @@ public class TestRun {
 		verify(mockPlayer, times(0)).getSugar();	
 	}
 	
-	// Tests House.generateRooms() by generating 5 rooms (indexed 0-4)
-	// Expected results: room 0 has cream, room 2 has coffee, room 4 has sugar
+	// Tests House.generateRooms() to make sure the rooms have the correct items
+	// Expected results: room 0 has cream, room 2 has coffee, room 4 (i.e. last room) has sugar
 	@Test
-	public void testGenerateRooms() {
+	public void testGenerateRoomsItems() {
 		Room[] rooms = (new House(1)).generateRooms(5);
 		boolean correctCream = rooms[0].hasCream();
 		boolean correctCoffee = rooms[2].hasCoffee();
 		boolean correctSugar = rooms[4].hasSugar();
 		assertTrue(correctCream && correctCoffee && correctSugar);
+	}
+	
+	// Tests House.generateRooms() to make sure the house has the correct number of rooms
+	@Test
+	public void testGenerateRoomsNumber() {
+		Room[] rooms = (new House(1)).generateRooms(5);
+		assertEquals(rooms.length, 5);
 	}
 }
